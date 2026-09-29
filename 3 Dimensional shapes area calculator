@@ -1,0 +1,51 @@
+print("=== 3D Shape Volume Calculator ===")
+print("1. Cube")
+print("2. Cuboid")
+print("3. Sphere")
+print("4. Cylinder")
+print("5. Cone")
+print("6. Triangular Prism")
+
+choice = int(input("Choose a shape (1-6): "))s
+
+if choice == 1:
+    side = float(input("Enter the side length: "))
+    volume = side ** 3
+    print("Volume of cube =", volume)
+
+elif choice == 2:
+    length = float(input("Enter the length: "))
+    width = float(input("Enter the width: "))
+    height = float(input("Enter the height: "))
+    volume = length * width * height
+    print("Volume of cuboid =", volume)
+
+elif choice == 3:
+    radius = float(input("Enter the radius: "))
+    volume = (4 / 3) * math.pi * radius ** 3
+    print("Volume of sphere =", volume)
+
+elif choice == 4:
+    radius = float(input("Enter the radius: "))
+    height = float(input("Enter the height: "))
+    volume = math.pi * radius ** 2 * height
+    print("Volume of cylinder =", volume)
+
+elif choice == 5:
+    radius = float(input("Enter the radius: "))
+    height = float(input("Enter the height: "))
+    volume = (1 / 3) * math.pi * radius ** 2 * height
+    print("Volume of cone =", volume)
+
+elif choice == 6:
+    base = float(input("Enter the base of the triangle: "))
+    triangle_height = float(input("Enter the height of the triangle: "))
+    prism_height = float(input("Enter the height/length of the prism: "))
+
+    triangle_area = 0.5 * base * triangle_height
+    volume = triangle_area * prism_height
+
+    print("Volume of triangular prism =", volume)
+
+else:
+    print("Invalid choice!")
