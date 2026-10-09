@@ -1,0 +1,138 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import math
+
+def calculate_volume():
+    try:
+        shape = shape_var.get()
+
+        if shape == "Cube":
+            side = float(entry1.get())
+            volume = side ** 3
+            formula = "side³"
+
+        elif shape == "Cuboid":
+            length = float(entry1.get())
+            width = float(entry2.get())
+            height = float(entry3.get())
+            volume = length * width * height
+            formula = "length × width × height"
+
+        elif shape == "Cylinder":
+            radius = float(entry1.get())
+            height = float(entry2.get())
+            volume = math.pi * radius ** 2 * height
+            formula = "π × radius² × height"
+
+        elif shape == "Sphere":
+            radius = float(entry1.get())
+            volume = (4 / 3) * math.pi * radius ** 3
+            formula = "(4/3) × π × radius³"
+
+        else:
+            return
+
+        if any(
+            float(entry.get()) <= 0
+            for entry in active_entries
+        ):
+            messagebox.showerror(
+                "Invalid input",
+                "Dimensions must be greater than zero."
+            )
+            return
+
+        result_label.config(
+            text=f"Volume: {volume:.2f} units³"
+        )
+        formula_label.config(text=f"Formula: {formula}")
+
+    except ValueError:
+        messagebox.showerror(
+            "Invalid input",
+            "Please enter valid numbers."
+        )
+
+
+def update_fields(event=None):
+    global active_entries
+
+    for widget in input_frame.winfo_children():
+        widget.destroy()
+
+    shape = shape_var.get()
+
+    if shape == "Cube":
+        labels = ["Side length"]
+    elif shape == "Cuboid":
+        labels = ["Length", "Width", "Height"]
+    elif shape == "Cylinder":
+        labels = ["Radius", "Height"]
+    else:
+        labels = ["Radius"]
+
+    active_entries = []
+
+    for i, label in enumerate(labels):
+        ttk.Label(
+            input_frame, text=label
+        ).grid(row=i, column=0, padx=5, pady=5, sticky="w")
+
+        entry = ttk.Entry(input_frame, width=20)
+        entry.grid(row=i, column=1, padx=5, pady=5)
+        active_entries.append(entry)
+
+    # Keep the entries available to calculate_volume()
+    global entry1, entry2, entry3
+    entry1 = active_entries[0]
+    entry2 = active_entries[1] if len(active_entries) > 1 else None
+    entry3 = active_entries[2] if len(active_entries) > 2 else None
+
+
+root = tk.Tk()
+root.title("Volume Calculator")
+root.geometry("380x440")
+root.resizable(False, False)
+
+ttk.Label(
+    root,
+    text="Volume Calculator",
+    font=("Arial", 20, "bold")
+).pack(pady=15)
+
+ttk.Label(root, text="Choose a shape:").pack()
+
+shape_var = tk.StringVar(value="Cube")
+shape_box = ttk.Combobox(
+    root,
+    textvariable=shape_var,
+    values=["Cube", "Cuboid", "Cylinder", "Sphere"],
+    state="readonly",
+    width=25
+)
+shape_box.pack(pady=8)
+shape_box.bind("<<ComboboxSelected>>", update_fields)
+
+input_frame = ttk.Frame(root)
+input_frame.pack(pady=10)
+
+ttk.Button(
+    root,
+    text="Calculate Volume",
+    command=calculate_volume
+).pack(pady=10)
+
+result_label = ttk.Label(
+    root,
+    text="Volume: —",
+    font=("Arial", 14, "bold")
+)
+result_label.pack(pady=10)
+
+formula_label = ttk.Label(root, text="")
+formula_label.pack(pady=5)
+
+active_entries = []
+update_fields()
+
+root.mainloop()
